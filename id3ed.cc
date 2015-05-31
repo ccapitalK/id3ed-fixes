@@ -489,6 +489,10 @@ bool format_string_parser(const char * format_string, char * const newname){
                         targ_pos+=sprintf(newname+targ_pos,"%.*s",(int)sizeof(genre_list[id3.genre]),genre_list[id3.genre])-1;
                         exp_matched=true;
                         break;
+                    case 'G':
+                        targ_pos+=sprintf(newname+targ_pos,"%02i",id3.genre)-1;
+                        exp_matched=true;
+                        break;
                     default:
                         printf("\nError: unexpected symbol \'%c\' found in format string.\n",format_string[fs_pos]);
                         return false;

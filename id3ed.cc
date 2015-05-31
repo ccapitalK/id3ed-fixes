@@ -470,7 +470,7 @@ void i3rename(const char *file,int quiet,int test){
 void i3info(const char *file,int quiet){
 	int f;
 	if (doopen(f,file,RDMODE))return;
-	printf("%s: ",file);fflush(stdout);
+	if(!(quiet&QUIET_PROGRESS))printf("%s: ",file);fflush(stdout);
 	off_t end=lseek(f,0,SEEK_END);
 	if (end>=0 && end<128) {
 		close (f);
@@ -484,19 +484,22 @@ void i3info(const char *file,int quiet){
 	}
 	if (doread(f,&id3,sizeof(id3),"id3buf"))return;
 	if (!strncmp(id3.tag,"TAG",3)){
-		if (id3.v11.empty==0)
-			printf("(tag v1.1%s)\n",id3.v11.tracknum?"":"?");
-		else
-			printf("(tag v1.0)\n");
-#define PRINTINFO(f) printf("%s: %.*s\n",#f, (int)sizeof(id3.f), id3.f)
-		PRINTINFO(songname);
-		PRINTINFO(artist);
-		PRINTINFO(album);
-		PRINTINFO(year);
-		PRINTINFO(comment);
-		if (id3.v11.empty==0)
+		if(!(quiet&QUIET_PROGRESS)){
+                    if (id3.v11.empty==0)
+                            printf("(tag v1.1%s)\n",id3.v11.tracknum?"":"?");
+                    else
+                            printf("(tag v1.0)\n");
+                }
+#define PRINTINFO(f) !(quiet&QUIET_PROGRESS)?printf("%s: %.*s\n",#f, (int)sizeof(id3.f), id3.f):printf("%.*s\n",(int)sizeof(id3.f), id3.f)
+		if(!(quiet&QUIET_SONG))     PRINTINFO(songname);
+		if(!(quiet&QUIET_ARTIST))   PRINTINFO(artist);
+		if(!(quiet&QUIET_ALBUM))    PRINTINFO(album);
+		if(!(quiet&QUIET_YEAR))     PRINTINFO(year);
+		if(!(quiet&QUIET_COMMENT))  PRINTINFO(comment);
+		if(!(quiet&QUIET_TRACK))
+                    if (id3.v11.empty==0)
 			printf("tracknum: %i\n", id3.v11.tracknum);
-		printf("genre: %s(%i)\n\n",(id3.genre<NUM_GENRE)?genre_list[id3.genre]:"unknown",id3.genre);
+		if(!(quiet&QUIET_GENRE))  printf("genre: %s(%i)\n",(id3.genre<NUM_GENRE)?genre_list[id3.genre]:"unknown",id3.genre);
 
 	}else
 		if ((!quiet))

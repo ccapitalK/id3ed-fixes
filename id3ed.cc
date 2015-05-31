@@ -144,7 +144,7 @@ void print_help(void){
 	printf("\
 Usage: id3ed [-s songname] [-n artist] [-a album] [-y year] [-c comment]\n\
 	     [-k tracknum] [-g genre] [-q] [-SNAYCKG] [-l/-L] [-r]\n\
-	     [-i] <mp3files> [-v]\n\n\
+	     [-i] [-m/M format string] <mp3files> [-v]\n\n\
   -q			no line interface; only set tags specified on command\n\
   			line. Use twice to suppress all output except errors.\n\
   -SNAYCKG		prompt to edit the specified tags only\n\
@@ -152,7 +152,9 @@ Usage: id3ed [-s songname] [-n artist] [-a album] [-y year] [-c comment]\n\
   -l/-L			display list of genres\n\
   -r			remove id3 tag from files\n\
   -i			show current id3 tag only, don't edit\n\
-  -v			output program version/license\n");
+  -v			output program version/license\n\
+  -M                    change filename based on provided format string\n\
+  -m                    display filename changes based on provided format string\n");
 }
 
 int main(int argc,char ** argv){
@@ -431,6 +433,14 @@ void stredit(const char * name, int maxlen, char * buf){
 #endif
 }
 
+int find_last(const char * const string, const char key){
+    int ret = -1;
+    for(int i = 0; string[i]!='\0';++i)
+        if(string[i]==key)
+            ret=i;
+    return ret;
+}
+
 bool format_string_parser(const char * format_string, char * const newname){
     int targ_pos=0;
     bool exp_matched;
@@ -472,7 +482,7 @@ bool format_string_parser(const char * format_string, char * const newname){
                         exp_matched=true;
                         break;
                     case 'k':
-                        targ_pos+=sprintf(newname+targ_pos,"%02i",track)-1;
+                        if(has_track)targ_pos+=sprintf(newname+targ_pos,"%02i",track)-1;
                         exp_matched=true;
                         break;
                     case 'g':
@@ -511,9 +521,11 @@ void i3rename(const char *file,int quiet,int test, const char *format_string){
 	if (doread(f,&id3,sizeof(id3),"id3buf"))return;
 	close (f);
 	if (!strncmp(id3.tag,"TAG",3)){
-		char newname[256];
+                int length=find_last(file,'/');
+		char newname[4096+(length!=-1)];
+                snprintf(newname,length+2,"%s",file);
 		//sprintf(newname,"%02i-%.*s.mp3",track,(int)sizeof(id3.songname),id3.songname);//##### TODO: handle directories in file, handle invalid chars in songname
-                if(!format_string_parser(format_string,newname))return;
+                if(!format_string_parser(format_string,newname+length+1))return;
 		if ((!quiet) || test){
 			printf("%s\n",newname);
 		}

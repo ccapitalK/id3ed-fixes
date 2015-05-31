@@ -1,4 +1,4 @@
-.TH id3ed 1 "22 Feb 2000"
+.TH id3ed 1 "31 May 2015"
 .SH NAME
 id3ed \- edit id3 description tags in mpeg3 files
 .SH SYNOPSIS
@@ -10,6 +10,8 @@ id3ed \- edit id3 description tags in mpeg3 files
 [-c comment]
 [-k tracknum]
 [-g genre]
+[-m FORMAT]
+[-M FORMAT]
 [-q]
 [-SNAYCKG]
 [-l]
@@ -35,8 +37,16 @@ The -[SNAYCKG] options allow you to edit only the tags you wish.  Other tags can
 still be set with their respective options.  For example, if you have a bunch of
 songs off of a single cd, most of the info is the same, and you will probably
 only want to set the songname manually for each track:
-.br
-id3ed -n SomeArtist -a SomeAlbum -y Someyear -S *.mp3
+.P
+.B id3ed 
+-n 
+.B SomeArtist 
+-a 
+.B SomeAlbum 
+-y 
+.B Someyear 
+-S 
+.B *.mp3
 .P
 Genres can be entered either using their name or code number.  To match by name
 however, it must match exactly (case insensitive).  -l displays a listing of
@@ -46,7 +56,34 @@ generally accepted code for "unknown".
 .P
 Tags can be removed from files with the -r option.  Only files that actually
 have a tag in them will be modified.  The -q option will disable the printing
-of which files had tags removed.  The -i option will list the tags in files.
+of which files had tags removed.  The -i option will list the tags in files, and,
+if used with the -[SNAYCKG] options, will print only the relevant fields, with 
+a second -q omitting the field name and tag version.
+.P
+The -M option will rename the file according to FORMAT. FORMAT is a string, with %
+escapes to denote TAG values. The ".mp3" at the end of the file will be automatically
+appended. The -m option does the same, except instead of renaming the file, it will
+simply print the output filename the FORMAT string will generate.
+.P
+FORMAT controls the output. Interpreted sequences are:
+.P
+%%      A literal %
+.P
+%s      The Song's Title
+.P
+%n      The Artist's Title
+.P
+%a      The Album Title
+.P
+%c      The Comment
+.P
+%k      The Track Number
+.P
+%y      The Year
+.P
+%g      The Genre eg. Country, Disco, etc
+.P
+%G      The Genre number eg. 29
 .P
 The version and license information can be viewed with the -v option.
 .SH NOTES

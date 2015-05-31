@@ -144,7 +144,7 @@ void print_help(void){
 	printf("\
 Usage: id3ed [-s songname] [-n artist] [-a album] [-y year] [-c comment]\n\
 	     [-k tracknum] [-g genre] [-q] [-SNAYCKG] [-l/-L] [-r]\n\
-	     [-i] [-m/M format string] <mp3files> [-v]\n\n\
+	     [-i] [-m/M FORMAT] <mp3files> [-v]\n\n\
   -q			no line interface; only set tags specified on command\n\
   			line. Use twice to suppress all output except errors.\n\
   -SNAYCKG		prompt to edit the specified tags only\n\
@@ -153,8 +153,8 @@ Usage: id3ed [-s songname] [-n artist] [-a album] [-y year] [-c comment]\n\
   -r			remove id3 tag from files\n\
   -i			show current id3 tag only, don't edit\n\
   -v			output program version/license\n\
-  -M                    change filename based on provided format string\n\
-  -m                    display filename changes based on provided format string\n");
+  -M                    change filename according to FORMAT\n\
+  -m                    display filename changes according to FORMAT\n");
 }
 
 int main(int argc,char ** argv){

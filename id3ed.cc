@@ -109,7 +109,7 @@ const char *genre_list[NUM_GENRE+1]={
 
 void i3info(const char *file,int quiet);
 void i3remove(const char *file,int quiet);
-void i3rename(const char *file,int quiet,int test);
+void i3rename(const char *file,int quiet,int test, const char * format_string);
 void i3edit(const char * file, const char * defsongname,
 		const char * defartist, const char * defalbum,
 		const char * defyear, const char * defcomment,
@@ -159,12 +159,12 @@ int main(int argc,char ** argv){
 	int c,quiet=0,alreadyquiet=0,mode=0;
 	char *songname = NULL, *artist = NULL, *album = NULL, *year = NULL,
 	*comment = NULL, *tracknum = NULL, *genre = NULL;
-
+        char *format_string=NULL;
 	if (argc<2){
 		print_help();
 	}
 	else {
-		while (EOF != (c = getopt(argc, argv, "s:n:a:y:c:k:g:qSNAYCKGlLrimMv"))){
+		while (EOF != (c = getopt(argc, argv, "s:n:a:y:c:k:g:m:M:qSNAYCKGlLriv"))){
 			switch (c){
 				case 's':
 					songname = optarg;
@@ -240,9 +240,11 @@ int main(int argc,char ** argv){
 					return 1;
 				case 'm':
 					mode=3;
+                                        format_string=optarg;
 					break;
 				case 'M':
 					mode=4;
+                                        format_string=optarg;
 					break;
 			}
 		}
@@ -251,7 +253,7 @@ int main(int argc,char ** argv){
 			switch (mode){
 				case 3:
 				case 4:
-					i3rename(argv[i],quiet,mode==3);
+					i3rename(argv[i],quiet,mode==3,format_string);
 					break;
 				case 2:
 					i3info(argv[i],quiet);
@@ -429,8 +431,67 @@ void stredit(const char * name, int maxlen, char * buf){
 #endif
 }
 
+bool format_string_parser(const char * format_string, char * const newname){
+    int targ_pos=0;
+    bool exp_matched;
+    int track=0;
+    bool has_track=false;
+    if (id3.v11.empty==0){
+        bool has_track=true;
+        track=id3.v11.tracknum;
+    }
+    for(int fs_pos=0; format_string[fs_pos]!='\0'; ++targ_pos,++fs_pos){
+        if(format_string[fs_pos]!='%')
+            newname[targ_pos]=format_string[fs_pos];
+        else{
+            exp_matched=false;
+            while(!exp_matched){
+                switch(format_string[++fs_pos]){
+                    case '%':
+                        newname[targ_pos++]='%';
+                        exp_matched=true;
+                        break;
+                    case 's':
+                        targ_pos+=sprintf(newname+targ_pos,"%.*s",(int)sizeof(id3.songname),id3.songname)-1;
+                        exp_matched=true;
+                        break;
+                    case 'n':
+                        targ_pos+=sprintf(newname+targ_pos,"%.*s",(int)sizeof(id3.artist),id3.artist)-1;
+                        exp_matched=true;
+                        break;
+                    case 'a':
+                        targ_pos+=sprintf(newname+targ_pos,"%.*s",(int)sizeof(id3.album),id3.album)-1;
+                        exp_matched=true;
+                        break;
+                    case 'y':
+                        targ_pos+=sprintf(newname+targ_pos,"%.*s",(int)sizeof(id3.year),id3.year)-1;
+                        exp_matched=true;
+                        break;
+                    case 'c':
+                        targ_pos+=sprintf(newname+targ_pos,"%.*s",(int)sizeof(has_track?id3.v11.comment:id3.comment),has_track?id3.v11.comment:id3.comment)-1;
+                        exp_matched=true;
+                        break;
+                    case 'k':
+                        targ_pos+=sprintf(newname+targ_pos,"%02i",track)-1;
+                        exp_matched=true;
+                        break;
+                    case 'g':
+                        targ_pos+=sprintf(newname+targ_pos,"%.*s",(int)sizeof(genre_list[id3.genre]),genre_list[id3.genre])-1;
+                        exp_matched=true;
+                        break;
+                    default:
+                        printf("\nError: unexpected symbol \'%c\' found in format string.\n",format_string[fs_pos]);
+                        return false;
+                }
+            }
+        }
+    }
+    sprintf(newname+targ_pos,".mp3");
+    return true;
+}
+
 //##### TODO: make renaming configurable?
-void i3rename(const char *file,int quiet,int test){
+void i3rename(const char *file,int quiet,int test, const char *format_string){
 	int f;
 	if (doopen(f,file,RDMODE))return;
 	if ((!quiet) || test){
@@ -451,10 +512,8 @@ void i3rename(const char *file,int quiet,int test){
 	close (f);
 	if (!strncmp(id3.tag,"TAG",3)){
 		char newname[256];
-		int track=0;
-		if (id3.v11.empty==0)
-			track=id3.v11.tracknum;
-		sprintf(newname,"%02i-%.*s.mp3",track,(int)sizeof(id3.songname),id3.songname);//##### TODO: handle directories in file, handle invalid chars in songname
+		//sprintf(newname,"%02i-%.*s.mp3",track,(int)sizeof(id3.songname),id3.songname);//##### TODO: handle directories in file, handle invalid chars in songname
+                if(!format_string_parser(format_string,newname))return;
 		if ((!quiet) || test){
 			printf("%s\n",newname);
 		}

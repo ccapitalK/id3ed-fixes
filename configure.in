@@ -1,0 +1,48 @@
+dnl Process this file with autoconf to produce a configure script.
+AC_INIT(id3ed.cc)
+dnl automake is ridiculously overboard for a prog this small
+dnl AM_INIT_AUTOMAKE(id3ed, 1.6)
+AC_CONFIG_HEADER(config.h)    
+
+AC_LANG_CPLUSPLUS
+
+dnl Checks for programs.
+AC_PROG_CXX
+AC_PROG_INSTALL
+
+dnl Checks for libraries.
+have_term_stuff=no
+AC_CHECK_LIB(curses, tputs)
+if test "$ac_cv_lib_curses_tputs" = "yes"; then
+ 	have_term_stuff=yes
+fi
+if test "$have_term_stuff" != "yes"; then
+	AC_CHECK_LIB(termcap, tputs)
+	if test "$ac_cv_lib_termcap_tputs" = "yes"; then
+		have_term_stuff=yes
+	fi
+fi
+
+if test "$have_term_stuff" = "yes"; then
+	AC_CHECK_LIB(readline, readline)
+	AC_CHECK_LIB(history, add_history)
+fi
+
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h unistd.h set.h getopt.h)
+
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_TYPE_OFF_T
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(strerror strtol snprintf)
+
+AC_OUTPUT(Makefile)
+	
+if test "$ac_cv_lib_readline_readline" != "yes"; then
+	echo ""
+	echo "Notice: not using readline.  Make sure you have readline dev libs/headers available"
+fi

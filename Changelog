@@ -1,0 +1,67 @@
+id3ed Changelog
+  
+01/09/2003 - 1.10.4
+	Fix build problem if curses was found but readline wasn't. (reported by Adam Schuetze)
+	Fix g++-3.2 compile warnings and errors. (Many people)
+	Remove $(wildcard ..) use from Makefile, it works with BSD make now. (suggested by Nick Nauwelaerts)
+
+09/16/2001 - 1.10.3
+	Include getopt.h if available. (Needed for cygwin, reported by Scott Alfter)
+	No longer attempt to set user/group in make install. (Needed for cygwin, and probably better anyway. Scott Alfter)
+	Fix lstat errors on files <128 bytes. (reported by Thomas Kunz?  From: was mangled so I'm not sure.)
+	Fixed truncated name of genre 140. (was "Contemporary C")
+
+10/04/2000 - 1.10.2
+	It is now possible to clear a tag in interactive mode.  (Eugene Paskevich)  (See NOTES in manpage for more info.)
+
+09/06/2000 - 1.10.1
+	Fixed -NAYCKG options selecting wrong/multiple things. (Laurent Alacoque)
+
+02/22/2000 - 1.10
+	Added -m/M mp3 rename options.  alpha-ish.
+	Added readline completion for genres
+	Fixed default genre type with no readline (Glenn Maynard)
+
+06/15/1999 - 1.9
+	-i opens with O_RDONLY (Jeremy Monin)
+	id3 v1.1 track number support, with backwards compatibility (original
+		v1.1-only patch from Chris Seawood)
+
+06/10/1999 - 1.8
+	forgot to include install-sh in the 1.7 tar.gz, oops.
+  
+06/09/1999 - 1.7
+	Fixed missing genre entry
+	Now uses autoconf
+	-i now on the manpage
+
+06/03/1999 - 1.6
+	Uses strerror() instead of sys_errlist[] (Eric L. Schott)
+	Fixed non readline compile (Arndt Schoenewald)
+	Added -i mode to show current tags
+
+06/01/1999 - 1.5
+	Updated genre list, now has 22 more genres
+	Added -L switch for alternate ordering when printing genre list
+	Fixed -l mode of genre listing, shouldn't print extra on the end or miss any
+
+03/26/1999 - 1.4
+	Added -r option to remove id3 tags
+	Replaced "Illegal args" error with help message.
+	Quiet mode doesn't print the name/version anymore.
+
+03/23/1999 - 1.3
+	Removed a debug printf that sneaked into the release.
+	Added -l to show known genres.
+	Added support to set genre by name as well as number.
+
+03/22/1999 - 1.2
+	Added -SNAYCG selection of which tags you want to edit.
+	Added optional use of readline library for input. (Tested with Readline
+4.0)  Comment the appropriate lines in the Makefile if you don't want it.
+	
+12/03/1998 - 1.1
+	Added command line default value patch from Peter Karlsson <pk@abc.se>
+	Added -q(uiet) command line param.
+
+02/24/1998 - 1.0 - initial release

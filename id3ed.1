@@ -1,0 +1,64 @@
+.TH id3ed 1 "22 Feb 2000"
+.SH NAME
+id3ed \- edit id3 description tags in mpeg3 files
+.SH SYNOPSIS
+.B id3ed
+[-s songname]
+[-n artist]
+[-a album]
+[-y year]
+[-c comment]
+[-k tracknum]
+[-g genre]
+[-q]
+[-SNAYCKG]
+[-l]
+[-L]
+[-r]
+[-i]
+[-v]
+files...
+.SH DESCRIPTION
+.B id3ed
+edits the "id3" tag for mpeg layer3 files.  The mpeg3 specification does not
+provide any method for storing song information, however the id3 tag has
+become a standard method for doing this, and most mp3 players can read the
+tag.  It will not cause any errors in players that do not support it.
+The tag is 128 bytes long and is located at the end of the file.
+.P
+The -[snayckg] options can be used to set default values for each field of
+the id3 tag.  With -q, these options can be used to set some or all of the
+id3 fields to a certain value without prompting for editing.  Specifing -q
+twice will disable the printing of which files are modified.
+.P
+The -[SNAYCKG] options allow you to edit only the tags you wish.  Other tags can
+still be set with their respective options.  For example, if you have a bunch of
+songs off of a single cd, most of the info is the same, and you will probably
+only want to set the songname manually for each track:
+.br
+id3ed -n SomeArtist -a SomeAlbum -y Someyear -S *.mp3
+.P
+Genres can be entered either using their name or code number.  To match by name
+however, it must match exactly (case insensitive).  -l displays a listing of
+known genres.  -L displays the same list, but in a row/column order rather than
+column/row.  Unknown genres can be used by specifying their code.  255 is the
+generally accepted code for "unknown".
+.P
+Tags can be removed from files with the -r option.  Only files that actually
+have a tag in them will be modified.  The -q option will disable the printing
+of which files had tags removed.  The -i option will list the tags in files.
+.P
+The version and license information can be viewed with the -v option.
+.SH NOTES
+In interactive mode, if you do not have readline, specifying an empty string is interpeted as keeping the value the same.  If you wish to actually clear the value of the current tag, use the EOT char, ctrl-d.  (If you are using readline, the input is automatically set to the current value, so erasing it and hitting enter is interpeted as clearing the tag.)
+.SH BUGS
+There is no sanity checking of mp3 files, id3ed will happily add tags to any
+files you tell it to.
+.SH AUTHOR
+Matt Mueller <donut@azstarnet.com>
+.P
+The latest version, and other programs I have written, are available from:
+.br
+http://www.azstarnet.com/~donut/programs.html
+.SH CONTRIBUTORS
+Peter Karlsson <pk@abc.se>

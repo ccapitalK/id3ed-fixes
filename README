@@ -7,11 +7,12 @@ New Features/Additions:
 
     The -m/-M flags
 
-These flags were in the 1.10.4 release of id3ed, but were undocumented and unfinished.
-These options were originally meant to rename the target files in terms of the id3 
-tag values, ie rename the file to '[TRACK NUMBER]-[SONG NAME].mp3', but have been 
-modified to rename the file based on a provided format string. -M will actually rename
-the file, but -m will only perform a dry run.
+These flags were in the 1.10.4 release of id3ed, but were undocumented and 
+unfinished. These options were originally meant to rename the target files in 
+terms of the id3 tag values, ie rename the file to 
+    '[TRACK NUMBER]-[SONG NAME].mp3', 
+but have been modified to rename the file based on a provided format string. 
+-M will actually rename the file, but -m will only perform a dry run.
 
 eg.
 
@@ -20,9 +21,9 @@ eg.
 
     Use of -[SNAYCKG] and -q with the -i flag
 
-The -i flag is used to print the id3 info of the given file. This flag can be used with 
--[SNAYCKG] to choose which fields to print, and with -q to to omit the field name, and 
-the tag version.
+The -i flag is used to print the id3 info of the given file. This flag can be 
+used with -[SNAYCKG] to choose which fields to print, and with -q to to omit the 
+field name, and the tag version.
 
 eg.
 

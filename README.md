@@ -1,4 +1,5 @@
-id3ed v1.10.5 Copyright 1998-2001,2003 Matthew Mueller <donut@azstarnet.com>
+id3ed-fixes v1.10.5 Copyright 2015 Sahan Fernando <sahan.h.fernando@gmail.com>
+Forked from id3ed v1.10.4, Copyright 1998-2001,2003 Matthew Mueller <donut@azstarnet.com>
 #id3ed
 **id3ed** is a program for the editing of id3-tags. **id3ed-fixes** is a set of **patches** to tidy up and advance id3ed, which is no longer in development.
 
@@ -50,3 +51,5 @@ See the file 'COPYING' for more information.
 You can get the latest version at 
 https://github.com/ccapitalK/id3ed-fixes
 
+You can get the original id3ed tarball at
+http://code.fluffytapeworm.com/projects/id3ed/
